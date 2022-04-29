@@ -1,5 +1,32 @@
 # %%
-import random
+from random import randrange
+
+
+def letter_position(passwordList, lettersList):
+    idx = 0
+    letterPos = []
+    for char in passwordList:
+        idx += 1
+        if char in lettersList:
+            letterPos.append(idx - 1)
+    return letterPos
+
+
+def char_factor(letterPos, chatFactor):
+    factor = int(len(letterPos)/chatFactor)
+    if factor == 0:
+        factor = 1
+    return factor
+
+
+def final_message(passwordList):
+    password = ""
+    for char in passwordList:
+        password += str(char)
+    print('\n')
+    print(f'Your new password: {password}')
+    print('\n')
+
 
 # Wspólczynik występowania  dodatkowych znaków (im wyższy tym mniej znaków)
 specCharFactor = 4
@@ -12,10 +39,7 @@ letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
 numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
 specChars = ['!', '@', '#', '$', '%', '^', '&', '*']
 passwordlist = []
-password = ''
-letterPos = []
-pos = 0
-factor = 0
+
 
 print('How long should the password be?')
 long = int(input('>>> '))
@@ -28,67 +52,38 @@ specChar = input('>>> ')
 
 # Buduje hasło z zadanej ilości znaków
 for i in range(0, long):
-    passwordlist.append(letters[random.randrange(0, len(letters))])
+    passwordlist.append(letters[randrange(0, len(letters))])
 
 # Dodaje znaki specjalne
 if specChar == 'y':
-    idx = 0
-    pos = 0
-    letterPos = []
-    for char in passwordlist:
-        idx += 1
-        if char in letters:
-            letterPos.append(idx - 1)
-
-    factor = int(len(letterPos)/specCharFactor)
-    if factor == 0:
-        factor = 1
+    factor = char_factor(letter_position(
+        passwordlist, letters), specCharFactor)
 
     for char in range(0, factor):
-        passwordlist[random.randrange(
-            0, len(passwordlist))] = specChars[random.randrange(0, len(specChars))]
+        passwordlist[randrange(0, len(passwordlist))
+                     ] = specChars[randrange(0, len(specChars))]
 
 # Dodaje cyfry
 if number == 'y':
-    idx = 0
     pos = 0
-    letterPos = []
-    for char in passwordlist:
-        idx += 1
-        if char in letters:
-            letterPos.append(idx - 1)
-
-    factor = int(len(letterPos)/numberFactor)
-    if factor == 0:
-        factor = 1
+    letterPos = letter_position(passwordlist, letters)
+    factor = char_factor(letterPos, numberFactor)
 
     for char in range(0, factor):
-        pos = letterPos[random.randrange(0, len(letterPos))]
-        passwordlist[pos] = str(numbers[random.randrange(0, len(numbers))])
+        pos = letterPos[randrange(0, len(letterPos))]
+        passwordlist[pos] = str(numbers[randrange(0, len(numbers))])
 
 # Zmienia litery na wielkie
 if upperChar == 'y':
-    idx = 0
     pos = 0
-    letterPos = []
-    for char in passwordlist:
-        idx += 1
-        if char in letters:
-            letterPos.append(idx - 1)
-
-    factor = int(len(letterPos)/upperCharFactor)
-    if factor == 0:
-        factor = 1
+    letterPos = letter_position(passwordlist, letters)
+    factor = char_factor(letterPos, upperCharFactor)
 
     for char in range(0, factor):
-        pos = letterPos[random.randrange(0, len(letterPos))]
+        pos = letterPos[randrange(0, len(letterPos))]
         passwordlist[pos] = passwordlist[pos].upper()
 
+final_message(passwordlist)
 
-for char in passwordlist:
-    password += str(char)
-print('\n')
-print(f'Your new password: {password}')
-print('\n')
 
 # %%
